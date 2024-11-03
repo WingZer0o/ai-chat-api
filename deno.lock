@@ -21,6 +21,7 @@
     "npm:@langchain/core@~0.3.17": "0.3.17_zod@3.23.8",
     "npm:@langchain/ollama@*": "0.1.1_@langchain+core@0.3.17__zod@3.23.8",
     "npm:@langchain/ollama@~0.1.1": "0.1.1_@langchain+core@0.3.17__zod@3.23.8",
+    "npm:@types/node@*": "22.5.4",
     "npm:langchain@*": "0.3.5_@langchain+core@0.3.17__zod@3.23.8_@langchain+ollama@0.1.1__@langchain+core@0.3.17___zod@3.23.8_zod@3.23.8",
     "npm:langchain@~0.3.5": "0.3.5_@langchain+core@0.3.17__zod@3.23.8_@langchain+ollama@0.1.1__@langchain+core@0.3.17___zod@3.23.8_zod@3.23.8",
     "npm:langsmith@~0.2.3": "0.2.3",
