@@ -1,0 +1,10 @@
+services:
+  app:
+    container_name: app
+    build: 
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    command: deno run -A main.ts
