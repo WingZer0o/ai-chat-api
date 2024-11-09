@@ -5,7 +5,9 @@ const router = new Router();
 
 router.post("/test", async (ctx) => {
     const body = await ctx.request.body.json();
-    ctx.response.body = await new Argon2Wrapper().hashPassword(body.welcome);
+    ctx.response.body = new Argon2Wrapper().hashPasswordThreadPool(
+        body.welcome,
+    );
 });
 
 export default router;
