@@ -3,6 +3,7 @@
     "dev": "deno run --watch main.ts"
   },
   "imports": {
+    "@felix/argon2": "jsr:@felix/argon2@^2.0.2",
     "@langchain/community": "npm:@langchain/community@^0.3.11",
     "@langchain/core": "npm:@langchain/core@^0.3.17",
     "@langchain/ollama": "npm:@langchain/ollama@^0.1.1",
