@@ -6,5 +6,5 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - .:/app
-    command: deno run -A main.ts
+      - .:/app  # Mount source code to container
+    command: ["deno", "run", "-A", "main.ts"]
