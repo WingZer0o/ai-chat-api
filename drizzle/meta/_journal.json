@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1731543284777,
+      "tag": "0000_far_silverclaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1731543392255,
+      "tag": "0001_past_fat_cobra",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1731544095200,
+      "tag": "0002_fat_chat",
+      "breakpoints": true
+    }
+  ]
+}
