@@ -1,4 +1,5 @@
 import { Router } from "@oak/oak/router";
+import { Argon2Wrapper } from "cas-typescript-sdk";
 import { eq } from "drizzle-orm/expressions";
 import { UserDBO } from "../../db/auth/user-dbo.ts";
 import { db, USERS } from "../../db/schema.ts";
@@ -10,9 +11,10 @@ const router = new Router();
 
 router.post("/create-user", async (ctx) => {
     const body: CreateUserDto = await ctx.request.body.json();
-    const userDBO = new UserDBO();
-    userDBO.email = body.email;
-    userDBO.password = body.password;
+    const userDBO = new UserDBO(
+        body.email,
+        new Argon2Wrapper().hashPassword(body.password),
+    );
     const doesUserExist = await db.select().from(USERS).where(
         eq(USERS.email, userDBO.email),
     );
