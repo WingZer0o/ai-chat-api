@@ -35,6 +35,7 @@ router.post("/token", async (ctx) => {
         const token = jwt.sign({ userId: user[0].id }, rsaKeys.privateKey, {
             algorithm: "RS256",
         });
+        // TODO: store public key in redis cache
         ctx.response.status = 200;
         ctx.response.body = new GetTokenResponseDto(token);
     } catch (error) {

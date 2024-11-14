@@ -14,6 +14,7 @@ services:
     command: ["deno", "run", "-A", "--watch", "main.ts"]
 
   postgres:
+    container_name: postgresql
     image: postgres:14-alpine
     ports:
       - 5432:5432
@@ -23,6 +24,19 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
+    networks:
+      - app-network
+
+  garnet:
+    container_name: garnet
+    restart: always
+    build:
+      context: .
+      dockerfile: garnet/Dockerfile
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data
     networks:
       - app-network
 
