@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm/expressions";
 import jwt from "jsonwebtoken";
 import { db, USERS } from "../../db/schema.ts";
 import { GetTokenDto } from "../../models/auth/get-token-dto.ts";
+import { GetTokenResponseDto } from "../../models/auth/get-token-response-dto.ts";
 import { UserDoesntExistDto } from "../../models/auth/user-doesnt-exist-dto.ts";
 
 const router = new Router();
@@ -29,15 +30,13 @@ router.post("/token", async (ctx) => {
             return;
         }
         const rsa = new RSAWrapper();
-        const rsaKeys = rsa.generateKeys(4096);
-        const token = jwt.sign({ foo: "bar" }, rsaKeys.privateKey, {
+        const rsaKeys = rsa.generateKeys(2048);
+        // TODO: store public key in redis cache
+        const token = jwt.sign({ userId: user[0].id }, rsaKeys.privateKey, {
             algorithm: "RS256",
         });
-        await jwt.verify(
-            token,
-            rsaKeys.publicKey,
-        );
         ctx.response.status = 200;
+        ctx.response.body = new GetTokenResponseDto(token);
     } catch (error) {
         ctx.response.status = 500;
         return;
