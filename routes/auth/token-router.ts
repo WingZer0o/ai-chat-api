@@ -12,16 +12,16 @@ router.post("/token", async (ctx) => {
     try {
         const body: GetTokenDto = await ctx.request.body.json();
         // TODO: email regex
-        const doesUserExist = await db.select().from(USERS).where(
+        const user = await db.select().from(USERS).where(
             eq(USERS.email, body.email),
         );
-        if (doesUserExist.length === 0) {
+        if (user.length === 0) {
             ctx.response.status = 400;
             ctx.response.body = new UserDoesntExistDto("User doesn't exist");
             return;
         }
         const isPasswordValid = new Argon2Wrapper().verify(
-            doesUserExist[0].password!,
+            user[0].password!,
             body.password,
         );
         if (!isPasswordValid) {
@@ -30,13 +30,14 @@ router.post("/token", async (ctx) => {
         }
         const rsa = new RSAWrapper();
         const rsaKeys = rsa.generateKeys(4096);
-        var token = jwt.sign({ foo: "bar" }, rsaKeys.privateKey, {
+        const token = jwt.sign({ foo: "bar" }, rsaKeys.privateKey, {
             algorithm: "RS256",
         });
         await jwt.verify(
             token,
             rsaKeys.publicKey,
         );
+        ctx.response.status = 200;
     } catch (error) {
         ctx.response.status = 500;
         return;
