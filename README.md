@@ -1,6 +1,6 @@
-# wollama
+# lwollama
 
-wollama is a dockerized web application that is intended to run on your local machine to perform inference against Llama 3.1.
+lwollama is a dockerized web application that is intended to run on your local machine to perform inference against Llama 3.1.
 
 ## To start
 You should probably have [Deno](https://deno.com) install first. `curl -fsSL https://deno.land/install.sh | sh`
