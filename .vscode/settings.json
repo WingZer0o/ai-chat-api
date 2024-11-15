@@ -1,6 +1,10 @@
 {
+  "deno.enable": true,
   "deno.lint": true,
   "editor.formatOnSave": true,
+  "deno.enablePaths": [
+    "./backend"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
