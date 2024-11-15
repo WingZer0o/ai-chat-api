@@ -45,7 +45,6 @@ router.post("/token", async (ctx) => {
     ctx.response.body = new GetTokenResponseDto(token);
   } catch (error) {
     ctx.response.status = 500;
-    console.log(error);
     return;
   }
 });
