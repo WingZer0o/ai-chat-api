@@ -16,4 +16,4 @@ COPY ./ /app
 # Compile the main app so that it doesn't need to be compiled each startup/entry.
 RUN deno install
 RUN deno cache main.ts
-CMD ["deno", "run", "-A", "--watch", "main.ts"]
+CMD ["deno", "run", "-A", "--inspect=0.0.0.0:9229", "--watch", "main.ts"]
