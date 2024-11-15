@@ -50,6 +50,7 @@ services:
     env_file:
       - path: ./backend/.env
     depends_on:
+      - deno
       - postgresql
     command: deno task push-migration
     volumes:

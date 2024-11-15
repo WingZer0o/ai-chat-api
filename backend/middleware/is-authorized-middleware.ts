@@ -2,7 +2,7 @@ import { Context } from "@oak/oak/context";
 import jwt from "jsonwebtoken";
 import redisConnection from "../garnet-connection.ts";
 
-export const authourized = async (ctx: Context, next: any) => {
+export const isAuthorizedMiddleware = async (ctx: Context, next: any) => {
   try {
     const headers: Headers = ctx.request.headers;
     const authorization = headers.get("Authorization");
@@ -18,7 +18,6 @@ export const authourized = async (ctx: Context, next: any) => {
     }
     // TODO: pull
     const decodedToken = await jwt.decode(token);
-    console.log(decodedToken);
     const rsaPublicKey = await redisConnection.get(
       `user-token-public-key-${decodedToken.userId}`
     );
