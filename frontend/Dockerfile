@@ -1,4 +1,4 @@
-FROM node:alpine as build
+FROM node:22-alpine as build
 EXPOSE 4200
 
 RUN npm config set registry https://registry.npmjs.org/
