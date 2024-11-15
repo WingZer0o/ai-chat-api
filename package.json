@@ -14,6 +14,7 @@
     "drizzle-orm": "^0.36.1",
     "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.5",
     "pg": "^8.13.1"
   },
   "devDependencies": {

@@ -11,6 +11,9 @@ services:
       - .:/app  # Mount source code to container
     networks:
       - app-network
+    depends_on:
+      - postgres
+      - garnet
     command: ["deno", "run", "-A", "--watch", "main.ts"]
 
   postgres:
@@ -36,7 +39,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./data:/data
+      - ~/apps/garnet:/data
     networks:
       - app-network
 
