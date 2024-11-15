@@ -5,6 +5,8 @@ EXPOSE 8080
 
 WORKDIR /app
 RUN chown -R deno:deno /app
+RUN mkdir -p /home/deno/.local/share
+RUN chown -R deno:deno /home/deno/.local
 
 # Prefer not to run as root.
 USER deno
@@ -13,5 +15,4 @@ USER deno
 COPY ./ /app
 # Compile the main app so that it doesn't need to be compiled each startup/entry.
 RUN deno cache main.ts
-
 CMD ["deno", "run", "-A", "--watch", "main.ts"]
