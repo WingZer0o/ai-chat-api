@@ -47,9 +47,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file:
+      - path: ./backend/.env
     depends_on:
       - postgresql
-    command: deno task migrate
+    command: deno task push-migration
     volumes:
       - ./backend:/app
 
