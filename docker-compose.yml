@@ -2,13 +2,14 @@ services:
   app:
     container_name: app
     build: 
+      context: ./backend
       dockerfile: Dockerfile
     env_file:
       - path: ./.env
     ports:
       - "8080:8080"
     volumes:
-      - .:/app  # Mount source code to container
+      - ./backend:/app  # Mount source code to container
     networks:
       - app-network
     depends_on:

@@ -1,5 +1,5 @@
 import { Router } from "@oak/oak/router";
-import llm from "../../ollama/ollama-connection.ts";
+import llm from "../../ollama-connection.ts";
 
 const router = new Router();
 
