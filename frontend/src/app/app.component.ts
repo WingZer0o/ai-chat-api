@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import { Component, ViewChild } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
 import { RouterOutlet } from "@angular/router";
@@ -24,13 +23,10 @@ export class AppComponent {
 
   private sideNavOpen: boolean = false;
 
-  constructor(private httpClient: HttpClient) {
+  constructor() {
   }
 
   ngOnInit() {
-    this.httpClient.get("/api/test").subscribe((response) => {
-      console.log(response);
-    });
   }
 
   public handleToggleSideNav(): void {
