@@ -43,6 +43,23 @@ services:
     networks:
       - app-network
 
+  ollama:
+    container_name: ollama
+    build:
+      context: .
+      dockerfile: ollama/Dockerfile
+    ports: 
+      - "11434:11434"
+    networks:
+      - app-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
 networks:
   app-network:
     driver: bridge
