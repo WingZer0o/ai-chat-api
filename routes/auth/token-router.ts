@@ -1,4 +1,3 @@
-import { Ollama } from "@langchain/ollama";
 import { Router } from "@oak/oak/router";
 import { Argon2Wrapper, RSAWrapper } from "cas-typescript-sdk";
 import { eq } from "drizzle-orm/expressions";
@@ -36,17 +35,6 @@ router.post("/token", async (ctx) => {
         const token = jwt.sign({ userId: user[0].id }, rsaKeys.privateKey, {
             algorithm: "RS256",
         });
-        const llm = new Ollama({
-            model: "llama3.1",
-            baseUrl: "http://host.docker.internal:11434", // Default value
-            temperature: 0,
-            maxRetries: 2,
-            // other params...
-        });
-        const inputText = "Ollama is an AI company that ";
-
-        const completion = await llm.invoke(inputText);
-        console.log(completion);
         ctx.response.status = 200;
         ctx.response.body = new GetTokenResponseDto(token);
     } catch (error) {
