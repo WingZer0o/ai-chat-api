@@ -4,6 +4,7 @@ FROM denoland/deno:2.0.4
 EXPOSE 8080
 
 WORKDIR /app
+RUN chown -R deno:deno /app
 
 # Prefer not to run as root.
 USER deno
