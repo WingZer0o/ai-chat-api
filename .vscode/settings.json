@@ -10,6 +10,6 @@
     "source.organizeImports": "explicit"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
