@@ -1,0 +1,9 @@
+<app-navbar (toggleSideNavEmitter)="handleToggleSideNav()"></app-navbar>
+<mat-sidenav-container class="h-full">
+  <mat-sidenav #sidenav>
+    <app-side-bar-nav-list></app-side-bar-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="overflow-hidden">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
