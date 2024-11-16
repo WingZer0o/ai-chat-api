@@ -1,3 +1,10 @@
+@if (!appService.$state.isAppInt()) {
+<div class="h-full flex align-content-center justify-content-center flex-wrap">
+  <div class="flex align-items-center justify-content-center">
+    <mat-spinner [diameter]="100"></mat-spinner>
+  </div>
+</div>
+} @else {
 <app-navbar (toggleSideNavEmitter)="handleToggleSideNav()"></app-navbar>
 <mat-sidenav-container class="h-full">
   <mat-sidenav #sidenav>
@@ -7,3 +14,4 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
+}
