@@ -3,6 +3,3 @@ CREATE TABLE IF NOT EXISTS "Users" (
 	"email" text,
 	"password" text
 );
---> statement-breakpoint
-DROP TABLE "dinosaurs" CASCADE;--> statement-breakpoint
-DROP TABLE "tasks" CASCADE;

@@ -28,6 +28,7 @@ export const isAuthorizedMiddleware = async (ctx: Context, next: any) => {
     if (!payload) {
       throw new Error("Token was not valid");
     }
+    console.log("yes");
     await next();
   } catch (error) {
     ctx.response.status = 401;
