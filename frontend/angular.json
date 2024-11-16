@@ -34,7 +34,7 @@
             "styles": [
               "@angular/material/prebuilt-themes/rose-red.css",
               "node_modules/primeflex/primeflex.css",
-              "src/styles.scss"
+              "src/styles/styles.scss"
             ],
             "scripts": []
           },

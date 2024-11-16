@@ -18,7 +18,7 @@ export class AppInitService {
         // TODO: other http call to get new token
       },
       error: (error) => {
-        console.error(error);
+        this.appService.$state.doesInitialUserExist.set(false);
       },
     });
   }
