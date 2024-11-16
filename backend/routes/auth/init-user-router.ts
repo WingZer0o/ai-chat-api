@@ -7,6 +7,7 @@ import { UserDBO } from "../../db/auth/user-dbo.ts";
 import { db, USERS } from "../../db/schema.ts";
 import redisConnection from "../../garnet-connection.ts";
 import { isAuthorizedMiddleware } from "../../middleware/is-authorized-middleware.ts";
+import { GetTokenResponseDto } from "../../models/auth/get-token-response-dto.ts";
 
 const router = new Router();
 
@@ -26,6 +27,11 @@ router.get("/does-initial-user-exist", async (ctx) => {
 router.post("/register-first-user", async (ctx) => {
   try {
     const body = await ctx.request.body.json();
+    const doesUserExist = await db.select().from(USERS).where(eq(USERS.id, 1));
+    if (doesUserExist?.length > 0) {
+      ctx.response.status = 409;
+      return;
+    }
     const argon2 = new Argon2Wrapper();
     await db
       .insert(USERS)
@@ -57,15 +63,13 @@ router.post("/login", async (ctx) => {
     `user-token-public-key-${user[0].id}`,
     rsaKeys.publicKey
   );
-  ctx.response.body = { token: token };
+  ctx.response.body = new GetTokenResponseDto(token);
   ctx.response.status = 200;
 });
 
 router.use("/is-token-valid", isAuthorizedMiddleware);
-
 router.get("/is-token-valid", async (ctx) => {
   // middleware validates the token
-  ctx.response.body = { login: true };
   ctx.response.status = 200;
 });
 
