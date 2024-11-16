@@ -55,8 +55,7 @@ router.post("/login", async (ctx) => {
     ctx.response.status = 401;
     return;
   }
-  const rsa = new RSAWrapper();
-  const rsaKeys = rsa.generateKeys(2048);
+  const rsaKeys = new RSAWrapper().generateKeys(2048);
   await db
     .update(USERS)
     .set({ tokenRsaPublicKey: rsaKeys.publicKey })
