@@ -5,7 +5,7 @@ import ChatRouter from "./chat/chat-index-router.ts";
 
 const router = new Router();
 
-router.use("/auth", IndexAuthRouter.routes());
-router.use("/chat", ChatRouter.routes());
+router.use("/api/auth", IndexAuthRouter.routes());
+router.use("/api/chat", ChatRouter.routes());
 
 export default router;

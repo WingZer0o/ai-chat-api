@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { SideBarNavListComponent } from './shared/components/side-bar-nav-list/side-bar-nav-list.component';
 import { MaterialModule } from './shared/material.module';
+import { AppInitService } from './shared/services/app-init.service';
 
 @Component({
   selector: 'app-root',
@@ -24,9 +25,14 @@ export class AppComponent {
 
   private sideNavOpen: boolean = false;
 
-  constructor(public appService: AppService) {}
+  constructor(
+    public appService: AppService,
+    private appInitService: AppInitService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.appInitService.start();
+  }
 
   public handleToggleSideNav(): void {
     !this.sideNavOpen ? this.sidenav.open() : this.sidenav.close();
