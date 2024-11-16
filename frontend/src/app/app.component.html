@@ -1,10 +1,10 @@
-@if (!appService.$state.isAppInt()) {
+@if (!appService.$state.isAppInit()) {
 <div class="h-full flex align-content-center justify-content-center flex-wrap">
     <div class="flex align-items-center justify-content-center">
         @if (!appService.$state.doesInitialUserExist()) {
-        <app-register-user />
+        <app-register-user (registedUserEvent)="registeredUserEvent()" />
         } @else {
-        <mat-spinner [diameter]="100"></mat-spinner>
+        <app-login />
         }
     </div>
 </div>

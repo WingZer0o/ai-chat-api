@@ -15,7 +15,7 @@ export class AppInitService {
   private initialzeUser(): void {
     this.httpClient.get('/api/auth/does-initial-user-exist').subscribe({
       next: (response) => {
-        // TODO: other http call to get new token
+        this.appService.$state.doesInitialUserExist.set(true);
       },
       error: (error) => {
         this.appService.$state.doesInitialUserExist.set(false);

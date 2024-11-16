@@ -1,17 +1,22 @@
 <form [formGroup]="formGroup">
+    <div class="text-center">
+        <h3>Register User</h3>
+    </div>
     <div class="flex flex-column">
         <mat-form-field class="flex align-items-center justify-content-center" appearance="fill">
             <mat-label>Email</mat-label>
-            <input matInput placeholder="Placeholder" formControlName="email">
-            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <input matInput formControlName="email">
+            <mat-icon matSuffix><span class="material-icons">
+                    alternate_email
+                </span></mat-icon>
             @if (this.formGroup.get('email')?.errors) {
             <mat-hint class="form-hint-error">Email is not valid</mat-hint>
             }
         </mat-form-field>
         <mat-form-field class="flex align-items-center justify-content-center" appearance="fill">
             <mat-label>Password</mat-label>
-            <input matInput placeholder="Placeholder" formControlName="password">
-            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <input matInput type="password" formControlName="password">
+            <mat-icon matSuffix>password</mat-icon>
             @if (this.formGroup.get('password')?.errors) {
             <mat-hint class="form-hint-error">Password does not meet standards</mat-hint>
             }

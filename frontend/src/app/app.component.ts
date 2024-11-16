@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
 import { RouterOutlet } from '@angular/router';
 import { AppService } from './app.service';
+import { LoginComponent } from './shared/components/login/login.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { RegisterUserComponent } from './shared/components/register-user/register-user.component';
 import { SideBarNavListComponent } from './shared/components/side-bar-nav-list/side-bar-nav-list.component';
@@ -19,6 +20,7 @@ import { AppInitService } from './shared/services/app-init.service';
     SideBarNavListComponent,
     ReactiveFormsModule,
     RegisterUserComponent,
+    LoginComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -40,5 +42,10 @@ export class AppComponent {
   public handleToggleSideNav(): void {
     !this.sideNavOpen ? this.sidenav.open() : this.sidenav.close();
     this.sideNavOpen = !this.sideNavOpen;
+  }
+
+  public registeredUserEvent(): void {
+    // TODO: store JWT
+    this.appService.$state.doesInitialUserExist.set(true);
   }
 }

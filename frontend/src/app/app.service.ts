@@ -5,7 +5,7 @@ import { Injectable, signal } from '@angular/core';
 })
 export class AppService {
   public readonly $state = {
-    isAppInt: signal<boolean>(false),
+    isAppInit: signal<boolean>(false),
     doesInitialUserExist: signal<boolean>(false),
   };
 

@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -22,7 +29,9 @@ export class RegisterUserComponent implements OnInit, OnDestroy {
   public formGroup!: FormGroup;
   public isSaving: boolean = false;
 
-  constructor(private fb: FormBuilder) {}
+  @Output() public registedUserEvent = new EventEmitter<void>();
+
+  constructor(private fb: FormBuilder, private httpClient: HttpClient) {}
 
   public ngOnInit(): void {
     this.formGroup = this.fb.group({
@@ -34,6 +43,22 @@ export class RegisterUserComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {}
 
   public handlerRegisterUser(): void {
-    this.isSaving = !this.isSaving;
+    if (this.formGroup.valid) {
+      this.isSaving = true;
+      let body = {
+        email: this.formGroup.get('email')?.value,
+        password: this.formGroup.get('password')?.value,
+      };
+      this.httpClient.post('/api/auth/register-first-user', body).subscribe({
+        next: (response) => {
+          this.isSaving = false;
+          this.registedUserEvent.emit();
+        },
+        error: (error) => {
+          this.isSaving = false;
+          // TODO: display error message
+        },
+      });
+    }
   }
 }
