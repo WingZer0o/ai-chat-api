@@ -20,7 +20,7 @@ export const isAuthorizedMiddleware = async (ctx: Context, next: any) => {
     }
     // TODO: pull
     const decodedToken = await jwt.decode(token);
-    const rsaPublicKey = await redisConnection.get(
+    let rsaPublicKey = await redisConnection.get(
       `user-token-public-key-${decodedToken.userId}`
     );
 
@@ -34,6 +34,7 @@ export const isAuthorizedMiddleware = async (ctx: Context, next: any) => {
           `user-token-public-key-${decodedToken.userId}`,
           databaseKey[0].tokenRsaPublicKey!
         );
+        rsaPublicKey = databaseKey[0].tokenRsaPublicKey;
       }
     }
     const payload = await jwt.verify(token, rsaPublicKey);
