@@ -1,0 +1,22 @@
+<h4 class="text-center">
+    Chats
+    <mat-icon class="cursor-pointer" [matMenuTriggerFor]="menu">chat</mat-icon>
+</h4>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="addNewChat()">
+        <mat-icon>add</mat-icon>
+        <span>Create New Chat</span>
+    </button>
+</mat-menu>
+<mat-list>
+    @for (chatChannel of chatChannels; track chatChannel.id) {
+    <mat-list-item (mouseenter)="toggleChatChannelControlsVisible(chatChannel.id)"
+        (mouseleave)="toggleChatChannelControlsInvisible(chatChannel.id)">
+        <mat-icon [ngClass]="!chatChannel.controlsVisible ? 'hidden' : 'block'" [ngStyle]="{ color: 'red' }"
+            class="mb-3 cursor-pointer" matListItemIcon (click)="deleteChannel(chatChannel.id)">delete</mat-icon>
+        <mat-icon [ngClass]="!chatChannel.controlsVisible ? 'hidden' : 'block'" [ngStyle]="{ color: 'blue' }"
+            class="mb-3 cursor-pointer" matListItemIcon>edit</mat-icon>
+        <h4 matListItemTitle>{{ chatChannel.name }}</h4>
+    </mat-list-item>
+    }
+</mat-list>
