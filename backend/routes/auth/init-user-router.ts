@@ -35,7 +35,9 @@ router.post("/register-first-user", async (ctx) => {
     const argon2 = new Argon2Wrapper();
     await db
       .insert(USERS)
-      .values(new UserDBO(body.email, argon2.hashPassword(body.password)));
+      .values(
+        new UserDBO(body.email, argon2.hashPassword(body.password), null)
+      );
     ctx.response.status = 200;
   } catch (error) {
     intervalServerError(ctx, error);
@@ -55,14 +57,17 @@ router.post("/login", async (ctx) => {
   }
   const rsa = new RSAWrapper();
   const rsaKeys = rsa.generateKeys(2048);
-  // TODO: store public key in redis cache
-  const token = jwt.sign({ userId: user[0].id }, rsaKeys.privateKey, {
-    algorithm: "RS256",
-  });
+  await db
+    .update(USERS)
+    .set({ tokenRsaPublicKey: rsaKeys.publicKey })
+    .where(eq(USERS.id, 1));
   await redisConnection.set(
     `user-token-public-key-${user[0].id}`,
     rsaKeys.publicKey
   );
+  const token = jwt.sign({ userId: user[0].id }, rsaKeys.privateKey, {
+    algorithm: "RS256",
+  });
   ctx.response.body = new GetTokenResponseDto(token);
   ctx.response.status = 200;
 });

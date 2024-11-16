@@ -1,5 +1,7 @@
 import { Context } from "@oak/oak/context";
+import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
+import { db, USERS } from "../db/schema.ts";
 import redisConnection from "../garnet-connection.ts";
 
 export const isAuthorizedMiddleware = async (ctx: Context, next: any) => {
@@ -21,8 +23,18 @@ export const isAuthorizedMiddleware = async (ctx: Context, next: any) => {
     const rsaPublicKey = await redisConnection.get(
       `user-token-public-key-${decodedToken.userId}`
     );
+
     if (!rsaPublicKey) {
-      throw new Error("No public key was found");
+      const databaseKey = await db
+        .select({ tokenRsaPublicKey: USERS.tokenRsaPublicKey })
+        .from(USERS)
+        .where(eq(USERS.id, 1));
+      if (databaseKey?.length > 0) {
+        await redisConnection.set(
+          `user-token-public-key-${decodedToken.userId}`,
+          databaseKey[0].tokenRsaPublicKey!
+        );
+      }
     }
     const payload = await jwt.verify(token, rsaPublicKey);
     if (!payload) {
