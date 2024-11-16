@@ -32,11 +32,14 @@ router.post("/register-first-user", async (ctx) => {
       ctx.response.status = 409;
       return;
     }
-    const argon2 = new Argon2Wrapper();
     await db
       .insert(USERS)
       .values(
-        new UserDBO(body.email, argon2.hashPassword(body.password), null)
+        new UserDBO(
+          body.email,
+          new Argon2Wrapper().hashPassword(body.password),
+          null
+        )
       );
     ctx.response.status = 200;
   } catch (error) {
