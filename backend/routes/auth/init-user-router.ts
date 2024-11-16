@@ -7,6 +7,7 @@ import { UserDBO } from "../../db/auth/user-dbo.ts";
 import { db, USERS } from "../../db/schema.ts";
 import redisConnection from "../../garnet-connection.ts";
 import { isAuthorizedMiddleware } from "../../middleware/is-authorized-middleware.ts";
+import { GetTokenResponseDto } from "../../models/auth/get-token-response-dto.ts";
 
 const router = new Router();
 
@@ -26,10 +27,20 @@ router.get("/does-initial-user-exist", async (ctx) => {
 router.post("/register-first-user", async (ctx) => {
   try {
     const body = await ctx.request.body.json();
-    const argon2 = new Argon2Wrapper();
+    const doesUserExist = await db.select().from(USERS).where(eq(USERS.id, 1));
+    if (doesUserExist?.length > 0) {
+      ctx.response.status = 409;
+      return;
+    }
     await db
       .insert(USERS)
-      .values(new UserDBO(body.email, argon2.hashPassword(body.password)));
+      .values(
+        new UserDBO(
+          body.email,
+          new Argon2Wrapper().hashPassword(body.password),
+          null
+        )
+      );
     ctx.response.status = 200;
   } catch (error) {
     intervalServerError(ctx, error);
@@ -47,25 +58,25 @@ router.post("/login", async (ctx) => {
     ctx.response.status = 401;
     return;
   }
-  const rsa = new RSAWrapper();
-  const rsaKeys = rsa.generateKeys(2048);
-  // TODO: store public key in redis cache
-  const token = jwt.sign({ userId: user[0].id }, rsaKeys.privateKey, {
-    algorithm: "RS256",
-  });
+  const rsaKeys = new RSAWrapper().generateKeys(2048);
+  await db
+    .update(USERS)
+    .set({ tokenRsaPublicKey: rsaKeys.publicKey })
+    .where(eq(USERS.id, 1));
   await redisConnection.set(
     `user-token-public-key-${user[0].id}`,
     rsaKeys.publicKey
   );
-  ctx.response.body = { token: token };
+  const token = jwt.sign({ userId: user[0].id }, rsaKeys.privateKey, {
+    algorithm: "RS256",
+  });
+  ctx.response.body = new GetTokenResponseDto(token);
   ctx.response.status = 200;
 });
 
 router.use("/is-token-valid", isAuthorizedMiddleware);
-
 router.get("/is-token-valid", async (ctx) => {
   // middleware validates the token
-  ctx.response.body = { login: true };
   ctx.response.status = 200;
 });
 
