@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { SingularValueInputComponent } from '../../../../shared/components/singular-value-input/singular-value-input.component';
 import { MaterialModule } from '../../../../shared/material.module';
 import { JWTService } from '../../../../shared/services/jwt.service';
@@ -17,8 +17,6 @@ import { ChatChannel } from '../../types/chat-channel';
 })
 export class ChatChannelComponent implements OnInit, OnDestroy {
   public chatChannels: ChatChannel[] = [];
-
-  private onDestroy$ = new Subject<void>();
 
   constructor(
     private matDialog: MatDialog,
@@ -49,9 +47,8 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
         error: (error) => {},
       });
   }
-  ngOnDestroy(): void {
-    this.onDestroy$.next();
-  }
+
+  ngOnDestroy(): void {}
 
   public addNewChat(clickEvent: any): void {
     const rect = clickEvent.target.getBoundingClientRect();
@@ -60,7 +57,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
       height: '250px',
     });
     dialogRef.componentInstance.submitEmitter
-      .pipe(takeUntil(this.onDestroy$))
+      .pipe(takeUntil(dialogRef.afterClosed()))
       .subscribe((value: string) => {
         this.addChatChannelToDatabase(dialogRef, value);
       });
@@ -104,8 +101,50 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
           `Bearer ${this.jwtService.getToken()}`
         ),
       })
-      .subscribe(() => {});
-    this.chatChannels = this.chatChannels.filter((x) => x.id !== chatChannelId);
+      .subscribe({
+        next: () => {
+          this.chatChannels = this.chatChannels.filter(
+            (x) => x.id !== chatChannelId
+          );
+        },
+      });
+  }
+
+  public editChannelName(clickEvent: any, chatChannel: ChatChannel): void {
+    const rect = clickEvent.target.getBoundingClientRect();
+    const dialogRef = this.matDialog.open(SingularValueInputComponent, {
+      position: { left: `${rect.left}px`, top: `${rect.bottom - 50}px` },
+      height: '250px',
+    });
+    dialogRef.componentInstance.input = chatChannel.name;
+    dialogRef.componentInstance.submitEmitter
+      .pipe(takeUntil(dialogRef.afterClosed()))
+      .subscribe((value: string) => {
+        this.changeChatChannelName(dialogRef, chatChannel, value);
+      });
+  }
+
+  public changeChatChannelName(
+    dialogRef: MatDialogRef<SingularValueInputComponent>,
+    chatChannel: ChatChannel,
+    newChannelName: string
+  ): void {
+    let body = { chatChannelName: newChannelName, id: chatChannel.id };
+    this.httpClient
+      .put('/api/chat/change-chat-channel-name', body, {
+        headers: new HttpHeaders().set(
+          'Authorization',
+          `Bearer ${this.jwtService.getToken()}`
+        ),
+      })
+      .subscribe({
+        next: (response: any) => {
+          chatChannel.modifiedAt = response.modifiedAt;
+          chatChannel.name = newChannelName;
+          this.chatChannels.sort((a, b) => b.modifiedAt - a.modifiedAt);
+          dialogRef.close();
+        },
+      });
   }
 
   public toggleChatChannelControlsVisible(chatChannelId: number): void {

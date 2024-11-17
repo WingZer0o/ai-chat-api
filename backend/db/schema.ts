@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { bigint, integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 import pg from "pg";
 
 const { Pool } = pg;
@@ -18,10 +18,10 @@ export const CHAT_CHANNELS = pgTable("ChatChannels", {
     .notNull()
     .references(() => USERS.id, { onDelete: "cascade" }),
   channelName: text().notNull(),
-  createdAt: integer()
+  createdAt: bigint({ mode: "number" })
     .notNull()
     .default(sql`extract(epoch from now())`),
-  modifiedAt: integer()
+  modifiedAt: bigint({ mode: "number" })
     .notNull()
     .default(sql`extract(epoch from now())`),
 });

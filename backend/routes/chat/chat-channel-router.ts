@@ -6,6 +6,19 @@ import { CHAT_CHANNELS, db } from "../../db/schema.ts";
 
 const router = new Router();
 
+router.put("/change-chat-channel-name", async (ctx) => {
+  const body = await ctx.request.body.json();
+  const modifiedDate = new Date().getTime();
+  await db
+    .update(CHAT_CHANNELS)
+    .set({ channelName: body.chatChannelName, modifiedAt: modifiedDate })
+    .where(eq(CHAT_CHANNELS.id, body.id));
+  ctx.response.status = 200;
+  ctx.response.body = {
+    modifiedAt: modifiedDate,
+  };
+});
+
 router.delete("/delete-chat-channel", async (ctx) => {
   const chatChannel = ctx.request.url.searchParams.get("chatChannelId");
   await db.delete(CHAT_CHANNELS).where(eq(CHAT_CHANNELS.id, chatChannel));

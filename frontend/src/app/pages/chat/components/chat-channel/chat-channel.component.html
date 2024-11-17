@@ -15,7 +15,7 @@
         <mat-icon [ngClass]="!chatChannel.controlsVisible ? 'hidden' : 'block'" [ngStyle]="{ color: 'red' }"
             class="mb-3 cursor-pointer" matListItemIcon (click)="deleteChannel(chatChannel.id)">delete</mat-icon>
         <mat-icon [ngClass]="!chatChannel.controlsVisible ? 'hidden' : 'block'" [ngStyle]="{ color: 'blue' }"
-            class="mb-3 cursor-pointer" matListItemIcon>edit</mat-icon>
+            class="mb-3 cursor-pointer" matListItemIcon (click)="editChannelName($event, chatChannel)">edit</mat-icon>
         <h4 matListItemTitle>{{ chatChannel.name }}</h4>
     </mat-list-item>
     }
