@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs';
+import { ConfirmationComponent } from '../../../../shared/components/confirmation/confirmation.component';
 import { SingularValueInputComponent } from '../../../../shared/components/singular-value-input/singular-value-input.component';
 import { MaterialModule } from '../../../../shared/material.module';
 import { JWTService } from '../../../../shared/services/jwt.service';
@@ -93,21 +94,33 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     // TODO: hit backend with check
   }
 
-  public deleteChannel(chatChannelId: number): void {
-    this.httpClient
-      .delete(`/api/chat/delete-chat-channel?chatChannelId=${chatChannelId}`, {
-        headers: new HttpHeaders().set(
-          'Authorization',
-          `Bearer ${this.jwtService.getToken()}`
-        ),
-      })
-      .subscribe({
-        next: () => {
-          this.chatChannels = this.chatChannels.filter(
-            (x) => x.id !== chatChannelId
-          );
-        },
-      });
+  public deleteChannel(clickEvent: any, chatChannelId: number): void {
+    const rect = clickEvent.target.getBoundingClientRect();
+    const dialogRef = this.matDialog.open(ConfirmationComponent, {
+      position: { left: `${rect.left}px`, top: `${rect.bottom - 50}px` },
+      height: '200px',
+    });
+    dialogRef.afterClosed().subscribe((value) => {
+      if (value.ok) {
+        this.httpClient
+          .delete(
+            `/api/chat/delete-chat-channel?chatChannelId=${chatChannelId}`,
+            {
+              headers: new HttpHeaders().set(
+                'Authorization',
+                `Bearer ${this.jwtService.getToken()}`
+              ),
+            }
+          )
+          .subscribe({
+            next: () => {
+              this.chatChannels = this.chatChannels.filter(
+                (x) => x.id !== chatChannelId
+              );
+            },
+          });
+      }
+    });
   }
 
   public editChannelName(clickEvent: any, chatChannel: ChatChannel): void {
