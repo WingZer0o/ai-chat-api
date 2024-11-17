@@ -67,7 +67,6 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
           );
           this.chatChannels.push(newChatChannel);
           this.chatChannels.sort((a, b) => b.modifiedAt - a.modifiedAt);
-          console.log(this.chatChannels);
           dialogRef.close();
         },
         error: (error) => {},
