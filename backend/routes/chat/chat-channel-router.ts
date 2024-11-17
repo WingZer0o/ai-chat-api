@@ -6,6 +6,12 @@ import { CHAT_CHANNELS, db } from "../../db/schema.ts";
 
 const router = new Router();
 
+router.delete("/delete-chat-channel", async (ctx) => {
+  const chatChannel = ctx.request.url.searchParams.get("chatChannelId");
+  await db.delete(CHAT_CHANNELS).where(eq(CHAT_CHANNELS.id, chatChannel));
+  ctx.response.status = 200;
+});
+
 router.get("/get-chat-channels-for-user", async (ctx) => {
   try {
     const userId = ctx.state.userId;

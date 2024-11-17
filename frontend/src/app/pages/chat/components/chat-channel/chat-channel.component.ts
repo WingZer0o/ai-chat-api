@@ -97,8 +97,14 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
   }
 
   public deleteChannel(chatChannelId: number): void {
-    // TODO make api call to delete channel.
-    // success after api call
+    this.httpClient
+      .delete(`/api/chat/delete-chat-channel?chatChannelId=${chatChannelId}`, {
+        headers: new HttpHeaders().set(
+          'Authorization',
+          `Bearer ${this.jwtService.getToken()}`
+        ),
+      })
+      .subscribe(() => {});
     this.chatChannels = this.chatChannels.filter((x) => x.id !== chatChannelId);
   }
 
