@@ -37,6 +37,7 @@ export const isAuthorizedMiddleware = async (ctx: Context, next: any) => {
         rsaPublicKey = databaseKey[0].tokenRsaPublicKey;
       }
     }
+    ctx.state.userId = decodedToken.userId;
     const payload = await jwt.verify(token, rsaPublicKey);
     if (!payload) {
       throw new Error("Token was not valid");

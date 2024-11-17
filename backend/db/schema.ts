@@ -14,6 +14,9 @@ export const USERS = pgTable("Users", {
 
 export const CHAT_CHANNELS = pgTable("ChatChannels", {
   id: serial().primaryKey().notNull(),
+  userId: integer()
+    .notNull()
+    .references(() => USERS.id, { onDelete: "cascade" }),
   channelName: text().notNull(),
   createdAt: integer()
     .notNull()

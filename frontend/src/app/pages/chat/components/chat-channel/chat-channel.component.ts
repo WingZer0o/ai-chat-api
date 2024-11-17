@@ -26,7 +26,29 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     private jwtService: JWTService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.httpClient
+      .get('/api/chat/get-chat-channels-for-user', {
+        headers: new HttpHeaders().set(
+          'Authorization',
+          `Bearer ${this.jwtService.getToken()}`
+        ),
+      })
+      .subscribe({
+        next: (response: any) => {
+          this.chatChannels = response.map((channel: any) => {
+            return new ChatChannel(
+              channel.id,
+              channel.channelName,
+              false,
+              channel.createdAt,
+              channel.modifiedAt
+            );
+          });
+        },
+        error: (error) => {},
+      });
+  }
   ngOnDestroy(): void {
     this.onDestroy$.next();
   }
