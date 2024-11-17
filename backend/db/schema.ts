@@ -1,5 +1,6 @@
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { pgTable, serial, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 import pg from "pg";
 
 const { Pool } = pg;
@@ -9,6 +10,17 @@ export const USERS = pgTable("Users", {
   email: text(),
   password: text(),
   tokenRsaPublicKey: text(),
+});
+
+export const CHAT_CHANNELS = pgTable("ChatChannels", {
+  id: serial().primaryKey().notNull(),
+  channelName: text().notNull(),
+  createdAt: integer()
+    .notNull()
+    .default(sql`extract(epoch from now())`),
+  modifiedAt: integer()
+    .notNull()
+    .default(sql`extract(epoch from now())`),
 });
 
 const pool = new Pool({

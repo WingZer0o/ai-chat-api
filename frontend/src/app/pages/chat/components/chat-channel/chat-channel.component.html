@@ -3,7 +3,7 @@
     <mat-icon class="cursor-pointer" [matMenuTriggerFor]="menu">chat</mat-icon>
 </h4>
 <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="addNewChat()">
+    <button mat-menu-item (click)="addNewChat($event)">
         <mat-icon>add</mat-icon>
         <span>Create New Chat</span>
     </button>

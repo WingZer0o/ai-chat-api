@@ -1,0 +1,16 @@
+<div class="mt-2" mat-dialog-content>
+    <form [formGroup]="form">
+        <div class="flex flex-column">
+            <mat-form-field class="h-full flex align-items-center justify-content-center" appearance="fill">
+                <textarea matInput formControlName="value" [rows]="6" [value]="input"></textarea>
+            </mat-form-field>
+            <div class="flex align-items-center justify-content-center">
+                @if(!isSaving) {
+                <button type="button" mat-flat-button (click)="submit()">Submit</button>
+                } @else {
+                <mat-spinner [diameter]="35"></mat-spinner>
+                }
+            </div>
+        </div>
+    </form>
+</div>
