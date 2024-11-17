@@ -27,7 +27,7 @@ export class SingularValueInputComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      value: [null, Validators.required],
+      value: [this.input, Validators.required],
     });
   }
 
