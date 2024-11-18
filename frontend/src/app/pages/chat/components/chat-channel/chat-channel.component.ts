@@ -29,7 +29,10 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           this.chatChannelService.$state.chatChannels.set(
-            response.map((channel: any) => {
+            response.map((channel: any, index: number) => {
+              if (index === 0) {
+                this.chatChannelService.$state.chatChannelId.set(channel.id);
+              }
               return new ChatChannel(
                 channel.id,
                 channel.channelName,
@@ -86,6 +89,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
   }
 
   public deleteChannel(clickEvent: any, chatChannelId: number): void {
+    event?.stopPropagation();
     const rect = clickEvent.target.getBoundingClientRect();
     const dialogRef = this.matDialog.open(ConfirmationComponent, {
       position: { left: `${rect.left}px`, top: `${rect.bottom - 50}px` },
@@ -112,7 +116,13 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     });
   }
 
+  public switchChannels(chatChannelId: number): void {
+    this.chatChannelService.$state.chatChannelId.set(chatChannelId);
+    console.log(this.chatChannelService.$state.chatChannelId());
+  }
+
   public editChannelName(clickEvent: any, chatChannel: ChatChannel): void {
+    event?.stopPropagation();
     const rect = clickEvent.target.getBoundingClientRect();
     const dialogRef = this.matDialog.open(SingularValueInputComponent, {
       position: { left: `${rect.left}px`, top: `${rect.bottom - 50}px` },

@@ -10,8 +10,8 @@
 </mat-menu>
 <mat-list>
     @for (chatChannel of chatChannelService.$state.chatChannels(); track chatChannel.id) {
-    <mat-list-item (mouseenter)="toggleChatChannelControlsVisible(chatChannel.id)"
-        (mouseleave)="toggleChatChannelControlsInvisible(chatChannel.id)">
+    <mat-list-item class="cursor-pointer" (mouseenter)="toggleChatChannelControlsVisible(chatChannel.id)"
+        (mouseleave)="toggleChatChannelControlsInvisible(chatChannel.id)" (click)="switchChannels(chatChannel.id)">
         <mat-icon [ngClass]="!chatChannel.controlsVisible ? 'hidden' : 'block'" [ngStyle]="{ color: 'red' }"
             class="mb-3 cursor-pointer" matListItemIcon
             (click)="deleteChannel($event, chatChannel.id)">delete</mat-icon>

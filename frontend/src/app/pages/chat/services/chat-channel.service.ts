@@ -7,6 +7,7 @@ import { ChatChannel } from '../types/chat-channel';
 export class ChatChannelService {
   public readonly $state = {
     chatChannels: signal<ChatChannel[] | null>(null),
+    chatChannelId: signal<number | null>(null),
   };
 
   constructor() {}
