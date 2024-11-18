@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs';
 import { ConfirmationComponent } from '../../../../shared/components/confirmation/confirmation.component';
 import { SingularValueInputComponent } from '../../../../shared/components/singular-value-input/singular-value-input.component';
 import { MaterialModule } from '../../../../shared/material.module';
+import { HttpClientService } from '../../../../shared/services/http-client.service';
 import { JWTService } from '../../../../shared/services/jwt.service';
 import { ChatChannelService } from '../../services/chat-channel.service';
 import { ChatChannel } from '../../types/chat-channel';
@@ -21,18 +21,13 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
   constructor(
     private matDialog: MatDialog,
     public chatChannelService: ChatChannelService,
-    private httpClient: HttpClient,
+    private httpClientService: HttpClientService,
     private jwtService: JWTService
   ) {}
 
   ngOnInit(): void {
-    this.httpClient
-      .get('/api/chat/get-chat-channels-for-user', {
-        headers: new HttpHeaders().set(
-          'Authorization',
-          `Bearer ${this.jwtService.getToken()}`
-        ),
-      })
+    this.httpClientService
+      .getAuthenticated('/api/chat/get-chat-channels-for-user')
       .subscribe({
         next: (response: any) => {
           this.chatChannelService.$state.chatChannels.set(
@@ -71,13 +66,8 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     channelName: string
   ): void {
     let body = { chatChannel: channelName };
-    this.httpClient
-      .post('/api/chat/add-chat-channel', body, {
-        headers: new HttpHeaders().set(
-          'Authorization',
-          `Bearer ${this.jwtService.getToken()}`
-        ),
-      })
+    this.httpClientService
+      .postAuthenticated('/api/chat/add-chat-channel', body)
       .subscribe({
         next: (response: any) => {
           const newChatChannel = new ChatChannel(
@@ -105,15 +95,9 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((value) => {
       if (value.ok) {
-        this.httpClient
-          .delete(
-            `/api/chat/delete-chat-channel?chatChannelId=${chatChannelId}`,
-            {
-              headers: new HttpHeaders().set(
-                'Authorization',
-                `Bearer ${this.jwtService.getToken()}`
-              ),
-            }
+        this.httpClientService
+          .deleteAuthenticated(
+            `/api/chat/delete-chat-channel?chatChannelId=${chatChannelId}`
           )
           .subscribe({
             next: () => {
@@ -150,13 +134,8 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
     newChannelName: string
   ): void {
     let body = { chatChannelName: newChannelName, id: chatChannel.id };
-    this.httpClient
-      .put('/api/chat/change-chat-channel-name', body, {
-        headers: new HttpHeaders().set(
-          'Authorization',
-          `Bearer ${this.jwtService.getToken()}`
-        ),
-      })
+    this.httpClientService
+      .putAuthenticated('/api/chat/change-chat-channel-name', body)
       .subscribe({
         next: (response: any) => {
           chatChannel.modifiedAt = response.modifiedAt;
