@@ -6,7 +6,6 @@ import { ConfirmationComponent } from '../../../../shared/components/confirmatio
 import { SingularValueInputComponent } from '../../../../shared/components/singular-value-input/singular-value-input.component';
 import { MaterialModule } from '../../../../shared/material.module';
 import { HttpClientService } from '../../../../shared/services/http-client.service';
-import { JWTService } from '../../../../shared/services/jwt.service';
 import { ChatChannelService } from '../../services/chat-channel.service';
 import { ChatChannel } from '../../types/chat-channel';
 
@@ -21,8 +20,7 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
   constructor(
     private matDialog: MatDialog,
     public chatChannelService: ChatChannelService,
-    private httpClientService: HttpClientService,
-    private jwtService: JWTService
+    private httpClientService: HttpClientService
   ) {}
 
   ngOnInit(): void {
