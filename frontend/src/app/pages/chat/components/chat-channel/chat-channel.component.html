@@ -9,7 +9,7 @@
     </button>
 </mat-menu>
 <mat-list>
-    @for (chatChannel of chatChannels; track chatChannel.id) {
+    @for (chatChannel of chatChannelService.$state.chatChannels(); track chatChannel.id) {
     <mat-list-item (mouseenter)="toggleChatChannelControlsVisible(chatChannel.id)"
         (mouseleave)="toggleChatChannelControlsInvisible(chatChannel.id)">
         <mat-icon [ngClass]="!chatChannel.controlsVisible ? 'hidden' : 'block'" [ngStyle]="{ color: 'red' }"

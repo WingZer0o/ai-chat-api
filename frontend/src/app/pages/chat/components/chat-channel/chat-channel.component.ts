@@ -7,6 +7,7 @@ import { ConfirmationComponent } from '../../../../shared/components/confirmatio
 import { SingularValueInputComponent } from '../../../../shared/components/singular-value-input/singular-value-input.component';
 import { MaterialModule } from '../../../../shared/material.module';
 import { JWTService } from '../../../../shared/services/jwt.service';
+import { ChatChannelService } from '../../services/chat-channel.service';
 import { ChatChannel } from '../../types/chat-channel';
 
 @Component({
@@ -17,10 +18,9 @@ import { ChatChannel } from '../../types/chat-channel';
   styleUrl: './chat-channel.component.scss',
 })
 export class ChatChannelComponent implements OnInit, OnDestroy {
-  public chatChannels: ChatChannel[] = [];
-
   constructor(
     private matDialog: MatDialog,
+    public chatChannelService: ChatChannelService,
     private httpClient: HttpClient,
     private jwtService: JWTService
   ) {}
@@ -35,15 +35,17 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
       })
       .subscribe({
         next: (response: any) => {
-          this.chatChannels = response.map((channel: any) => {
-            return new ChatChannel(
-              channel.id,
-              channel.channelName,
-              false,
-              channel.createdAt,
-              channel.modifiedAt
-            );
-          });
+          this.chatChannelService.$state.chatChannels.set(
+            response.map((channel: any) => {
+              return new ChatChannel(
+                channel.id,
+                channel.channelName,
+                false,
+                channel.createdAt,
+                channel.modifiedAt
+              );
+            })
+          );
         },
         error: (error) => {},
       });
@@ -85,8 +87,9 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
             response.createdAt,
             response.modifiedAt
           );
-          this.chatChannels.push(newChatChannel);
-          this.chatChannels.sort((a, b) => b.modifiedAt - a.modifiedAt);
+          let existingChannels = this.chatChannelService.$state.chatChannels();
+          existingChannels?.push(newChatChannel);
+          existingChannels?.sort((a, b) => b.modifiedAt - a.modifiedAt);
           dialogRef.close();
         },
         error: (error) => {},
@@ -114,9 +117,13 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
           )
           .subscribe({
             next: () => {
-              this.chatChannels = this.chatChannels.filter(
-                (x) => x.id !== chatChannelId
-              );
+              let chatChannles = this.chatChannelService.$state.chatChannels();
+              if (chatChannles!?.length > 0) {
+                chatChannles = chatChannles!.filter(
+                  (x) => x.id !== chatChannelId
+                );
+                this.chatChannelService.$state.chatChannels.set(chatChannles);
+              }
             },
           });
       }
@@ -154,21 +161,27 @@ export class ChatChannelComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           chatChannel.modifiedAt = response.modifiedAt;
           chatChannel.name = newChannelName;
-          this.chatChannels.sort((a, b) => b.modifiedAt - a.modifiedAt);
+          this.chatChannelService.$state
+            .chatChannels()
+            ?.sort((a, b) => b.modifiedAt - a.modifiedAt);
           dialogRef.close();
         },
       });
   }
 
   public toggleChatChannelControlsVisible(chatChannelId: number): void {
-    let channel = this.chatChannels.find((x) => x.id === chatChannelId);
+    let channel = this.chatChannelService.$state
+      .chatChannels()
+      ?.find((x) => x.id === chatChannelId);
     if (channel) {
       channel.controlsVisible = true;
     }
   }
 
   public toggleChatChannelControlsInvisible(chatChannelId: number): void {
-    let channel = this.chatChannels.find((x) => x.id === chatChannelId);
+    let channel = this.chatChannelService.$state
+      .chatChannels()
+      ?.find((x) => x.id === chatChannelId);
     if (channel) {
       channel.controlsVisible = false;
     }
