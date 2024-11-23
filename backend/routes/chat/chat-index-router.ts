@@ -7,5 +7,6 @@ const router = new Router();
 
 router.use(isAuthorizedMiddleware, ChatChannelRouter.routes());
 router.use(isAuthorizedMiddleware, PromptRouter.routes());
+router.use(isAuthorizedMiddleware, PromptRouter.routes());
 
 export default router;
